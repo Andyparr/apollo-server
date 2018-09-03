@@ -1,0 +1,29 @@
+# import Response, Date from '../../shared.graphql'
+
+type Book {
+  id: String!
+  title: String!
+  author: String!
+  createdAt: Date!
+}
+
+type Query {
+  getAllBooks: [Book!]!
+}
+
+input AddBookInput {
+  title: String!
+  author: String!
+}
+
+input UpdateBookInput {
+  id: String!
+  title: String
+  author: String
+}
+
+type Mutation {
+  addBook(input: AddBookInput): Response!
+  deleteBook(id: String!): Response!
+  updateBook(input: UpdateBookInput): Response!
+}

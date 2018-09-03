@@ -1,0 +1,21 @@
+type User {
+  id: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  registeredAt: Date!
+  confirmed: Boolean!
+}
+
+type Response {
+  ok: String!
+  path: String
+  message: String!
+}
+
+scalar Date
+
+type Query {
+  getAllUsers: [User!]!
+}
