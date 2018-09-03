@@ -1,0 +1,11 @@
+input RegisterInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  register(input: RegisterInput!): [Response!]!
+  deleteUser(id: String!): Response!
+}

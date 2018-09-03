@@ -23,7 +23,7 @@ input UpdateBookInput {
 }
 
 type Mutation {
-  addBook(input: AddBookInput): Response!
+  addBook(input: AddBookInput!): Response!
   deleteBook(id: String!): Response!
-  updateBook(input: UpdateBookInput): Response!
+  updateBook(input: UpdateBookInput!): Response!
 }

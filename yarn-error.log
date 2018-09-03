@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/Cellar/node/10.9.0/bin/node /usr/local/Cellar/yarn/1.9.4/libexec/bin/yarn.js test
+  /usr/local/Cellar/node/10.9.0/bin/node /usr/local/Cellar/yarn/1.9.4/libexec/bin/yarn.js add -D @types/express-rate-limit @types/rate-limit-redis
 
 PATH: 
   /usr/local/opt/llvm/bin:/usr/local/sbin:/Users/development/.yarn/bin:/Users/development/.rvm/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -14,12 +14,17 @@ Platform:
   darwin x64
 
 Trace: 
-  SyntaxError: /Users/development/Desktop/apollo-server/package.json: Unexpected string in JSON at position 1744
-      at JSON.parse (<anonymous>)
-      at /usr/local/Cellar/yarn/1.9.4/libexec/lib/cli.js:1130:59
-      at Generator.next (<anonymous>)
-      at step (/usr/local/Cellar/yarn/1.9.4/libexec/lib/cli.js:92:30)
-      at /usr/local/Cellar/yarn/1.9.4/libexec/lib/cli.js:103:13
+  Error: https://registry.yarnpkg.com/@types%2frate-limit-redis: Not found
+      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.9.4/libexec/lib/cli.js:64202:18)
+      at Request.self.callback (/usr/local/Cellar/yarn/1.9.4/libexec/lib/cli.js:137468:22)
+      at Request.emit (events.js:182:13)
+      at Request.<anonymous> (/usr/local/Cellar/yarn/1.9.4/libexec/lib/cli.js:138440:10)
+      at Request.emit (events.js:182:13)
+      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.9.4/libexec/lib/cli.js:138362:12)
+      at Object.onceWrapper (events.js:273:13)
+      at IncomingMessage.emit (events.js:187:15)
+      at endReadableNT (_stream_readable.js:1085:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
 
 npm manifest: 
   {
@@ -40,14 +45,18 @@ npm manifest:
       "connect-redis": "^3.3.3",
       "dotenv": "^6.0.0",
       "express": "^4.16.3",
+      "express-rate-limit": "^3.1.0",
       "express-session": "^1.15.6",
       "faker": "^4.1.0",
       "glob": "^7.1.3",
       "graphql": "^14.0.0",
+      "graphql-middleware": "^1.7.0",
+      "graphql-redis-subscriptions": "^1.5.0",
       "graphql-tools": "^3.1.1",
       "ioredis": "^4.0.0",
       "merge-graphql-schemas": "^1.5.3",
       "pg": "^7.4.3",
+      "rate-limit-redis": "^1.5.0",
       "reflect-metadata": "^0.1.12",
       "request-promise": "^4.2.2",
       "typeorm": "^0.2.7",
@@ -82,7 +91,6 @@ npm manifest:
       "transform": {
         "^.+\\.tsx?$": "ts-jest"
       },
-      "coverageDirectory": "./src"
       "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
       "moduleFileExtensions": [
         "ts",
@@ -974,7 +982,7 @@ Lockfile:
     version "1.11.0"
     resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.11.0.tgz#46aa1751fb6a2f93ee5e689bb1087d4b14c6c205"
   
-  bluebird@^3.5.0:
+  bluebird@^3.3.4, bluebird@^3.5.0:
     version "3.5.1"
     resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
   
@@ -1227,6 +1235,10 @@ Lockfile:
       strip-ansi "^4.0.0"
       wrap-ansi "^2.0.0"
   
+  clone@^1.0.2:
+    version "1.0.4"
+    resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
+  
   closest-file-data@^0.1.4:
     version "0.1.4"
     resolved "https://registry.yarnpkg.com/closest-file-data/-/closest-file-data-0.1.4.tgz#975f87c132f299d24a0375b9f63ca3fb88f72b3a"
@@ -1430,6 +1442,12 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/default-require-extensions/-/default-require-extensions-2.0.0.tgz#f5f8fbb18a7d6d50b21f641f649ebb522cfe24f7"
     dependencies:
       strip-bom "^3.0.0"
+  
+  defaults@^1.0.3:
+    version "1.0.3"
+    resolved "https://registry.yarnpkg.com/defaults/-/defaults-1.0.3.tgz#c656051e9817d9ff08ed881477f3fe4019f3ef7d"
+    dependencies:
+      clone "^1.0.2"
   
   define-properties@^1.1.2:
     version "1.1.3"
@@ -1691,6 +1709,12 @@ Lockfile:
       jest-matcher-utils "^23.5.0"
       jest-message-util "^23.4.0"
       jest-regex-util "^23.3.0"
+  
+  express-rate-limit@^3.1.0:
+    version "3.1.0"
+    resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-3.1.0.tgz#d00ace41fd0ae1173ed3fc76812bf59035aeda2e"
+    dependencies:
+      defaults "^1.0.3"
   
   express-session@^1.15.6:
     version "1.15.6"
@@ -2038,13 +2062,28 @@ Lockfile:
     dependencies:
       apollo-server-env "2.0.2"
   
+  graphql-middleware@^1.7.0:
+    version "1.7.0"
+    resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-1.7.0.tgz#4311581400f6aeafd118337fca4ac34ec78db06b"
+    dependencies:
+      graphql-tools "^3.0.5"
+  
+  graphql-redis-subscriptions@^1.5.0:
+    version "1.5.0"
+    resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-1.5.0.tgz#53c9be28ee69f61ffbfe808f8f82f7e718254acf"
+    dependencies:
+      graphql-subscriptions "^0.5.6"
+      iterall "^1.1.3"
+    optionalDependencies:
+      ioredis "^3.1.2"
+  
   graphql-schema-typescript@^1.2.3:
     version "1.2.3"
     resolved "https://registry.yarnpkg.com/graphql-schema-typescript/-/graphql-schema-typescript-1.2.3.tgz#53bc8efae82705c550850c10699bc1497fc426e2"
     dependencies:
       yargs "^11.0.0"
   
-  graphql-subscriptions@^0.5.8:
+  graphql-subscriptions@^0.5.6, graphql-subscriptions@^0.5.8:
     version "0.5.8"
     resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.5.8.tgz#13a6143c546bce390404657dc73ca501def30aa7"
     dependencies:
@@ -2054,7 +2093,7 @@ Lockfile:
     version "2.9.2"
     resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.9.2.tgz#2f60a5a981375f430bf1e6e95992427dc18af686"
   
-  graphql-tools@^3.0.4, graphql-tools@^3.1.1:
+  graphql-tools@^3.0.4, graphql-tools@^3.0.5, graphql-tools@^3.1.1:
     version "3.1.1"
     resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-3.1.1.tgz#d593358f01e7c8b1671a17b70ddb034dea9dbc50"
     dependencies:
@@ -2279,6 +2318,34 @@ Lockfile:
   invert-kv@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
+  
+  ioredis@^3.1.2:
+    version "3.2.2"
+    resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-3.2.2.tgz#b7d5ff3afd77bb9718bb2821329b894b9a44c00b"
+    dependencies:
+      bluebird "^3.3.4"
+      cluster-key-slot "^1.0.6"
+      debug "^2.6.9"
+      denque "^1.1.0"
+      flexbuffer "0.0.6"
+      lodash.assign "^4.2.0"
+      lodash.bind "^4.2.1"
+      lodash.clone "^4.5.0"
+      lodash.clonedeep "^4.5.0"
+      lodash.defaults "^4.2.0"
+      lodash.difference "^4.5.0"
+      lodash.flatten "^4.4.0"
+      lodash.foreach "^4.5.0"
+      lodash.isempty "^4.4.0"
+      lodash.keys "^4.2.0"
+      lodash.noop "^3.0.1"
+      lodash.partial "^4.2.1"
+      lodash.pick "^4.4.0"
+      lodash.sample "^4.2.1"
+      lodash.shuffle "^4.2.0"
+      lodash.values "^4.3.0"
+      redis-commands "^1.2.0"
+      redis-parser "^2.4.0"
   
   ioredis@^4.0.0:
     version "4.0.0"
@@ -3095,6 +3162,10 @@ Lockfile:
       p-locate "^2.0.0"
       path-exists "^3.0.0"
   
+  lodash.assign@^4.2.0:
+    version "4.2.0"
+    resolved "https://registry.yarnpkg.com/lodash.assign/-/lodash.assign-4.2.0.tgz#0d99f3ccd7a6d261d19bdaeb9245005d285808e7"
+  
   lodash.bind@^4.2.1:
     version "4.2.1"
     resolved "https://registry.yarnpkg.com/lodash.bind/-/lodash.bind-4.2.1.tgz#7ae3017e939622ac31b7d7d7dcb1b34db1690d35"
@@ -3130,6 +3201,14 @@ Lockfile:
   lodash.isempty@^4.4.0:
     version "4.4.0"
     resolved "https://registry.yarnpkg.com/lodash.isempty/-/lodash.isempty-4.4.0.tgz#6f86cbedd8be4ec987be9aaf33c9684db1b31e7e"
+  
+  lodash.keys@^4.2.0:
+    version "4.2.0"
+    resolved "https://registry.yarnpkg.com/lodash.keys/-/lodash.keys-4.2.0.tgz#a08602ac12e4fb83f91fc1fb7a360a4d9ba35205"
+  
+  lodash.noop@^3.0.1:
+    version "3.0.1"
+    resolved "https://registry.yarnpkg.com/lodash.noop/-/lodash.noop-3.0.1.tgz#38188f4d650a3a474258439b96ec45b32617133c"
   
   lodash.partial@^4.2.1:
     version "4.2.1"
@@ -3921,6 +4000,13 @@ Lockfile:
     version "1.2.0"
     resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
   
+  rate-limit-redis@^1.5.0:
+    version "1.5.0"
+    resolved "https://registry.yarnpkg.com/rate-limit-redis/-/rate-limit-redis-1.5.0.tgz#3e6183b9a643437998cc3730232edd35897dde28"
+    dependencies:
+      defaults "^1.0.3"
+      redis "^2.6.0-2"
+  
   raw-body@2.3.2:
     version "2.3.2"
     resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.3.2.tgz#bcd60c77d3eb93cde0050295c3f379389bc88f89"
@@ -4007,7 +4093,7 @@ Lockfile:
     version "1.2.0"
     resolved "https://registry.yarnpkg.com/redis-errors/-/redis-errors-1.2.0.tgz#eb62d2adb15e4eaf4610c04afe1529384250abad"
   
-  redis-parser@^2.6.0:
+  redis-parser@^2.4.0, redis-parser@^2.6.0:
     version "2.6.0"
     resolved "https://registry.yarnpkg.com/redis-parser/-/redis-parser-2.6.0.tgz#52ed09dacac108f1a631c07e9b69941e7a19504b"
   
@@ -4017,7 +4103,7 @@ Lockfile:
     dependencies:
       redis-errors "^1.0.0"
   
-  redis@^2.1.0:
+  redis@^2.1.0, redis@^2.6.0-2:
     version "2.8.0"
     resolved "https://registry.yarnpkg.com/redis/-/redis-2.8.0.tgz#202288e3f58c49f6079d97af7a10e1303ae14b02"
     dependencies:

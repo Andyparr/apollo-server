@@ -10,8 +10,10 @@ export const resolvers: ResolverMap = {
     }
   },
   Mutation: {
-    addBook: async (_, args: GQL.IAddBookInput) => {
-      const { title, author } = args
+    addBook: async (_, args: GQL.MutationToAddBookArgs) => {
+      const {
+        input: { title, author }
+      } = args
       const bookAlreadyExists = await Book.findOne({ where: { title, author } })
       if (bookAlreadyExists) {
         return {
@@ -46,8 +48,10 @@ export const resolvers: ResolverMap = {
         message: 'Book has been removed'
       }
     },
-    updateBook: async (_, args: GQL.IUpdateBookInput) => {
-      const { id, title, author } = args
+    updateBook: async (_, args: GQL.MutationToUpdateBookArgs) => {
+      const {
+        input: { id, title, author }
+      } = args
       const retrieveBook = await Book.findOne({ where: { id } })
       if (!retrieveBook) {
         return {

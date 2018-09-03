@@ -1,4 +1,4 @@
-import * as request from 'request-promise'
+import * as rp from 'request-promise'
 
 export class TestClient {
   url: string
@@ -11,13 +11,73 @@ export class TestClient {
     this.url = url
     this.options = {
       withCredentials: true,
-      jar: request.jar(),
+      jar: rp.jar(),
       json: true
     }
   }
 
+  async register(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+  ) {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+        mutation {
+          register(
+            input: {
+              firstName: ${firstName},
+              lastName: ${lastName},
+              email: ${email},
+              password: ${password}
+            }
+          ) {
+            ok
+            message
+            path
+          }
+        }
+        
+        
+        `
+      }
+    })
+  }
+
+  async logout() {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+        mutation {
+          logout
+        }
+        `
+      }
+    })
+  }
+
+  async forgotPasswordChange(newPassword: string, key: string) {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+          mutation {
+            forgotPasswordChange(newPassword: "${newPassword}", key: "${key}") {
+              path
+              message
+            }
+          }
+        `
+      }
+    })
+  }
+
   async me() {
-    return request.post(this.url, {
+    return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
@@ -33,70 +93,21 @@ export class TestClient {
   }
 
   async login(email: string, password: string) {
-    return request.post(this.url, {
-      ...this.options,
-      body: {
-        query: `
-          mutation {
-            login(email: "${email}", password: "${password}") {
-              ok
-              path
-              message
-            }
-          }
-        `
-      }
-    })
-  }
-
-  async register(
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string
-  ) {
-    return request.post(this.url, {
+    return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
         mutation {
-          register(firstName: "${firstName}" lastName: "${lastName}" email: "${email}", password: "${password}") {
+          login(input: { email: ${email}, password: ${password} }) {
             ok
             path
             message
           }
         }
+        
+        
         `
       }
     })
   }
-
-  async logout() {
-    return request.post(this.url, {
-      ...this.options,
-      body: {
-        query: `
-          mutation {
-            logout
-          }
-        `
-      }
-    })
-  }
-
-  // async forgotPasswordChange(newPassword: string, key: string) {
-  //   return request.post(this.url, {
-  //     ...this.options,
-  //     body: {
-  //       query: `
-  //         mutation {
-  //           forgotPasswordChange(newPassword: "${newPassword}", key: "${key}") {
-  //             path
-  //             message
-  //           }
-  //         }
-  //       `
-  //     }
-  //   })
-  // }
 }

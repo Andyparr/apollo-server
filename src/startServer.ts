@@ -1,14 +1,21 @@
-import { ApolloServer } from 'apollo-server-express'
-import * as express from 'express'
-import * as session from 'express-session'
-import * as connectRedis from 'connect-redis'
-import { genSchema } from './utils/genSchema'
-import { createTypeormConnection } from './utils/createTypeormConnection'
 import 'reflect-metadata'
-import { redis } from './redis'
-import { redisSessionPrefix } from './constants'
 import 'dotenv/config'
+
+import { ApolloServer } from 'apollo-server-express'
+import * as connectRedis from 'connect-redis'
+import * as express from 'express'
+import * as RateLimit from 'express-rate-limit'
+import * as session from 'express-session'
+import { RedisPubSub } from 'graphql-redis-subscriptions'
+import * as RateLimitRedisStore from 'rate-limit-redis'
+
+import { redisSessionPrefix } from './constants'
+import { userLoader } from './loaders/UserLoader'
+import { redis } from './redis'
 import { createTestConnection } from './testUtils/createTestConnection'
+import { createTypeormConnection } from './utils/createTypeormConnection'
+import { genSchema } from './utils/genSchema'
+import { confirmEmail } from './routes/confirmEmail'
 
 const SESSION_SECRET = 'ajslkjalksjdfkl'
 const RedisStore = connectRedis(session as any)
@@ -18,18 +25,37 @@ export const startServer = async () => {
     await redis.flushall()
   }
 
+  const schema = genSchema() as any
+
+  const pubsub = new RedisPubSub()
+
   const server = new ApolloServer({
-    schema: genSchema() as any,
-    context: async ({ req }: any) => {
+    schema,
+    context: async ({ request, response }: any) => {
       return {
         redis,
-        session: req.session,
-        req
+        url: request ? request.protocol + '://' + request.get('host') : '',
+        session: request ? request.session : undefined,
+        req: request,
+        res: response,
+        userLoader: userLoader(),
+        pubsub
       }
     }
   })
 
   const app = express()
+
+  app.use(
+    new RateLimit({
+      store: new RateLimitRedisStore({
+        client: redis
+      }),
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // limit each IP to 100 requests per windowMs
+      delayMs: 0 // disable delaying - full speed until the max limit is reached
+    })
+  )
 
   app.use(
     session({
@@ -49,6 +75,8 @@ export const startServer = async () => {
     })
   )
 
+  app.use('/images', express.static('images'))
+
   const cors = {
     credentials: true,
     origin:
@@ -56,6 +84,8 @@ export const startServer = async () => {
         ? '*'
         : (process.env.FRONTEND_HOST as string)
   }
+
+  app.get('/confirm/:id', confirmEmail)
 
   if (process.env.NODE_ENV === 'test') {
     await createTestConnection(true)
