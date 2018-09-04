@@ -4,8 +4,10 @@ import {
   BeforeInsert,
   Column,
   Entity,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  OneToMany
 } from 'typeorm'
+import { Post } from './Post'
 @Entity('users')
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -34,6 +36,9 @@ export class User extends BaseEntity {
 
   @Column('boolean', { default: false })
   forgotPasswordLocked: boolean
+
+  @OneToMany(() => Post, post => post.user)
+  posts: Post[]
 
   @BeforeInsert()
   async hashPasswordBeforeInsert() {

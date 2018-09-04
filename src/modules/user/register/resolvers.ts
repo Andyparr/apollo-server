@@ -25,12 +25,6 @@ const schema = yup.object().shape({
 })
 
 export const resolvers: ResolverMap = {
-  Query: {
-    getAllUsers: async () => {
-      const users = await User.find()
-      return users
-    }
-  },
   Mutation: {
     register: async (_, args: GQL.MutationToRegisterArgs, { redis, url }) => {
       const {
