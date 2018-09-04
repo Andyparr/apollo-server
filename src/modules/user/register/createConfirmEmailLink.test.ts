@@ -27,7 +27,7 @@ beforeAll(async () => {
     password,
     username,
     registeredAt: new Date(),
-    confirmed: true
+    confirmed: false
   }).save()
   userId = user.id
 })
@@ -44,7 +44,6 @@ test('Make sure it confirms user and clears key in redis', async () => {
   )
 
   const response = await fetch(url)
-  console.log(url)
   const text = await response.text()
   expect(text).toEqual('ok')
   const user = await User.findOne({ where: { id: userId } })

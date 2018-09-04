@@ -42,7 +42,7 @@ const loginExpectError = async (
 
 describe('login', () => {
   test('email not found error', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
     await loginExpectError(
       client,
       'test@test.com',
@@ -52,7 +52,7 @@ describe('login', () => {
   })
 
   test('email not confirmed', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
 
     await client.register(
       validFirstName,
@@ -66,7 +66,7 @@ describe('login', () => {
   })
 
   test('login successfully', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
 
     await User.update({ email: validEmail }, { confirmed: true })
 
@@ -84,7 +84,7 @@ describe('login', () => {
   })
 
   test('invalid password', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
     await loginExpectError(client, validEmail, 'aslkdfjaksdljf', invalidLogin)
   })
 })

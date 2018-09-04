@@ -56,8 +56,6 @@ export const resolvers: ResolverMap = {
         ]
       }
 
-      console.log(password)
-
       const user = User.create({
         firstName,
         lastName,

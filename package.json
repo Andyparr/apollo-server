@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "test": "NODE_ENV=test jest --coverage --runInBand --watch",
+    "test": "NODE_ENV=test jest --watch",
     "generate:types": "ts-node src/scripts/createTypes.ts"
   },
   "dependencies": {

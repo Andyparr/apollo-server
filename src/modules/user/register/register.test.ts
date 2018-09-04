@@ -28,7 +28,7 @@ afterAll(async () => {
 
 describe('Resgister user', async () => {
   test('Register user successfully', async () => {
-    const client = new TestClient(process.env.TEST_HOST)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
     const response = await client.register(
       validFirstName,
       validLastName,
@@ -49,7 +49,7 @@ describe('Resgister user', async () => {
   })
 
   test('Register user with duplicate email', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
     const response = await client.register(
       validFirstName,
       validLastName,
@@ -66,7 +66,7 @@ describe('Resgister user', async () => {
   })
 
   test('Invalid email error', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
     const response = await client.register(
       validFirstName,
       validLastName,
@@ -91,7 +91,7 @@ describe('Resgister user', async () => {
   })
 
   test('Invalid password error', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
     const response = await client.register(
       validFirstName,
       validLastName,
@@ -111,7 +111,7 @@ describe('Resgister user', async () => {
   })
 
   test('Invalid email and password error', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
     const response = await client.register(
       validFirstName,
       validLastName,

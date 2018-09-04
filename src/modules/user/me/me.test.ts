@@ -32,13 +32,13 @@ afterAll(async () => {
 
 describe('me', () => {
   test('return null if no cookie', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
     const response = await client.me()
     expect(response.data.me).toBeNull()
   })
 
   test('get current user', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
     await client.login(email, password)
     const response = await client.me()
 

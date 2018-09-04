@@ -8,7 +8,7 @@ import { expiredKeyError } from './errorMessages'
 import { forgotPasswordPrefix } from '../../../constants'
 import { formatYupError } from '../../../utils/formatYupError'
 import { sendEmail } from '../../../utils/sendEmail'
-import { GQL } from '@instagram/server/src/types/graphql-schema'
+import { GQL } from '../../../types/graphql-schema'
 
 export const resolvers: ResolverMap = {
   Mutation: {
@@ -28,7 +28,7 @@ export const resolvers: ResolverMap = {
         // ];
       }
 
-      // await forgotPasswordLockAccount(user.id, redis);
+      // await forgotPasswordLockAccount(user.id, redis)
       const url = await createForgotPasswordLink(
         process.env.FRONTEND_HOST as string,
         user.id,
@@ -48,7 +48,7 @@ export const resolvers: ResolverMap = {
       if (!userId) {
         return [
           {
-            path: 'newPassword',
+            path: 'key',
             message: expiredKeyError
           }
         ]

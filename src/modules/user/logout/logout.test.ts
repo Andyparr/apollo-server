@@ -32,7 +32,7 @@ afterAll(async () => {
 
 describe('logout', () => {
   test('test logging out a user', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
 
     await client.login(email, password)
 
@@ -53,8 +53,8 @@ describe('logout', () => {
   })
 
   test('logout of all sessions', async () => {
-    const session1 = new TestClient(process.env.TEST_HOST as string)
-    const session2 = new TestClient(process.env.TEST_HOST as string)
+    const session1 = new TestClient(`${process.env.TEST_HOST}/graphql`)
+    const session2 = new TestClient(`${process.env.TEST_HOST}/graphql`)
 
     await session1.login(email, password)
     await session2.login(email, password)

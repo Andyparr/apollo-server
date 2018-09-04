@@ -32,7 +32,8 @@ beforeAll(async () => {
     password,
     username,
     registeredAt: new Date(),
-    confirmed: true
+    confirmed: true,
+    forgotPasswordLocked: true
   }).save()
   userId = user.id
 })
@@ -43,7 +44,7 @@ afterAll(async () => {
 
 describe('forgot password', () => {
   test('make sure it works', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(`${process.env.TEST_HOST}/graphql`)
 
     // lock account
     await forgotPasswordLockAccount(userId, redis)
@@ -58,6 +59,7 @@ describe('forgot password', () => {
       data: {
         login: [
           {
+            ok: '👎',
             message: forgotPasswordLockedError,
             path: 'email'
           }
@@ -98,7 +100,13 @@ describe('forgot password', () => {
     })
     expect(await client.login(email, newPassword)).toEqual({
       data: {
-        login: null
+        login: [
+          {
+            ok: '👍',
+            path: null,
+            message: 'Logged in successfully'
+          }
+        ]
       }
     })
   })
