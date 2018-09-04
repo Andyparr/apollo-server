@@ -20,7 +20,8 @@ export class TestClient {
     firstName: string,
     lastName: string,
     email: string,
-    password: string
+    password: string,
+    username: string
   ) {
     return rp.post(this.url, {
       ...this.options,
@@ -29,10 +30,11 @@ export class TestClient {
         mutation {
           register(
             input: {
-              firstName: ${firstName},
-              lastName: ${lastName},
-              email: ${email},
-              password: ${password}
+              firstName: "${firstName}",
+              lastName: "${lastName}",
+              email: "${email}",
+              password: "${password}",
+              username: "${username}"
             }
           ) {
             ok
@@ -40,8 +42,6 @@ export class TestClient {
             path
           }
         }
-        
-        
         `
       }
     })
@@ -98,14 +98,12 @@ export class TestClient {
       body: {
         query: `
         mutation {
-          login(input: { email: ${email}, password: ${password} }) {
+          login(input: { emailOrUsername: "${email}", password: "${password}" }) {
             ok
             path
             message
           }
-        }
-        
-        
+        }   
         `
       }
     })

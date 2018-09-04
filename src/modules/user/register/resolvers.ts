@@ -33,14 +33,14 @@ export const resolvers: ResolverMap = {
   },
   Mutation: {
     register: async (_, args: GQL.MutationToRegisterArgs, { redis, url }) => {
+      const {
+        input: { firstName, lastName, email, password, username }
+      } = args
       try {
-        await schema.validate(args, { abortEarly: false })
+        await schema.validate(args.input, { abortEarly: false })
       } catch (error) {
         return formatYupError(error)
       }
-      const {
-        input: { firstName, lastName, email, password }
-      } = args
       const userAlreadyExists = await User.findOne({
         where: { email },
         select: ['id']
@@ -63,7 +63,9 @@ export const resolvers: ResolverMap = {
         lastName,
         email,
         password,
-        registeredAt: new Date()
+        username,
+        registeredAt: new Date(),
+        confirmed: false
       })
 
       await user.save()
@@ -82,21 +84,6 @@ export const resolvers: ResolverMap = {
           message: 'User has been registered successfully'
         }
       ]
-    },
-    deleteUser: async (_: any, args: GQL.MutationToDeleteUserArgs) => {
-      const { id } = args
-      const retrieveUser = await User.findOne({ where: { id } })
-      if (!retrieveUser) {
-        return {
-          ok: '👎',
-          message: 'User does not exist'
-        }
-      }
-      await retrieveUser.remove()
-      return {
-        ok: '👍',
-        message: 'User has been removed'
-      }
     }
   }
 }

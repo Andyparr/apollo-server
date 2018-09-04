@@ -4,6 +4,7 @@ import { ResolverMap } from '../../../types/graphql-utils'
 import { User } from '../../../entity/User'
 import { userSessionIdPrefix } from '../../../constants'
 import { GQL } from '../../../types/graphql-schema'
+import { getConnection } from 'typeorm'
 
 const errorResponse = [
   {
@@ -20,11 +21,19 @@ export const resolvers: ResolverMap = {
       { session, redis, req }
     ) => {
       const {
-        input: { email, password }
+        input: { emailOrUsername, password }
       } = args
-      const user = await User.findOne({
-        where: { email }
-      })
+
+      const user = await getConnection()
+        .getRepository(User)
+        .createQueryBuilder('user')
+        .where('user.email = :email', {
+          email: emailOrUsername
+        })
+        .orWhere('user.username = :username', {
+          username: emailOrUsername
+        })
+        .getOne()
 
       if (!user) {
         return errorResponse

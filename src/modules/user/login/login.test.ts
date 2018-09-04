@@ -9,6 +9,7 @@ const validFirstName = faker.name.firstName()
 const validLastName = faker.name.lastName()
 const validEmail = faker.internet.email()
 const validPassword = faker.internet.password()
+const validUsername = faker.internet.userName()
 
 let connection: Connection
 
@@ -57,7 +58,8 @@ describe('login', () => {
       validFirstName,
       validLastName,
       validEmail,
-      validPassword
+      validPassword,
+      validUsername
     )
 
     await loginExpectError(client, validEmail, validPassword, confirmEmailError)

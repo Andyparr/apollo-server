@@ -11,10 +11,10 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column('varchar')
+  @Column('varchar', { length: 255 })
   firstName: string
 
-  @Column('varchar')
+  @Column('varchar', { length: 255 })
   lastName: string
 
   @Column('varchar', { length: 255 })
@@ -22,6 +22,9 @@ export class User extends BaseEntity {
 
   @Column('text')
   password: string
+
+  @Column('varchar', { length: 255 })
+  username: string
 
   @Column('timestamptz')
   registeredAt: Date

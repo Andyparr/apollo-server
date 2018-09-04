@@ -31,13 +31,13 @@ export const startServer = async () => {
 
   const server = new ApolloServer({
     schema,
-    context: async ({ request, response }: any) => {
+    context: async ({ req, res }: any) => {
       return {
         redis,
-        url: request ? request.protocol + '://' + request.get('host') : '',
-        session: request ? request.session : undefined,
-        req: request,
-        res: response,
+        url: req ? req.protocol + '://' + req.get('host') : '',
+        session: req ? req.session : undefined,
+        req: req,
+        res: res,
         userLoader: userLoader(),
         pubsub
       }

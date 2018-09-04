@@ -1,30 +1,37 @@
-import * as faker from 'faker';
-import * as Redis from 'ioredis';
-import { Connection } from 'typeorm';
+import * as faker from 'faker'
+import * as Redis from 'ioredis'
+import { Connection } from 'typeorm'
 
-import { passwordNotLongEnough } from '@instagram/common';
+import { passwordNotLongEnough } from '@instagram/common'
 
-import { User } from '../../../entity/User';
-import { createTestConnection } from '../../../testUtils/createTestConnection';
-import { createForgotPasswordLink } from '../../../utils/createForgotPasswordLink';
-import { forgotPasswordLockAccount } from '../../../utils/forgotPasswordLockAccount';
-import { TestClient } from '../../../utils/TestClient';
-import { forgotPasswordLockedError } from '../login/errorMessages';
-import { expiredKeyError } from './errorMessages';
+import { User } from '../../../entity/User'
+import { createTestConnection } from '../../../testUtils/createTestConnection'
+import { createForgotPasswordLink } from '../../../utils/createForgotPasswordLink'
+import { forgotPasswordLockAccount } from '../../../utils/forgotPasswordLockAccount'
+import { TestClient } from '../../../utils/TestClient'
+import { forgotPasswordLockedError } from '../login/errorMessages'
+import { expiredKeyError } from './errorMessages'
 
 let conn: Connection
 export const redis = new Redis()
 faker.seed(Date.now() + 0)
+const firstName = faker.name.firstName()
+const lastName = faker.name.lastName()
 const email = faker.internet.email()
 const password = faker.internet.password()
+const username = faker.internet.userName()
 const newPassword = faker.internet.password()
 
 let userId: string
 beforeAll(async () => {
   conn = await createTestConnection()
   const user = await User.create({
+    firstName,
+    lastName,
     email,
     password,
+    username,
+    registeredAt: new Date(),
     confirmed: true
   }).save()
   userId = user.id
@@ -46,7 +53,6 @@ describe('forgot password', () => {
     const key = parts[parts.length - 1]
 
     const response6 = await client.login(email, password)
-    console.log(`Response: ${response6}`)
     // make sure you can't login to locked account
     expect(response6).toEqual({
       data: {

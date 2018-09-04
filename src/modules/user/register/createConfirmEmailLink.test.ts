@@ -10,14 +10,24 @@ import { createTestConnection } from '../../../testUtils/createTestConnection'
 let userId = ''
 const redis = new Redis()
 faker.seed(Date.now() + 4)
+const firstName = faker.name.firstName()
+const lastName = faker.name.lastName()
+const email = faker.internet.email()
+const password = faker.internet.password()
+const username = faker.internet.userName()
 
 let conn: Connection
 
 beforeAll(async () => {
   conn = await createTestConnection()
   const user = await User.create({
-    email: faker.internet.email(),
-    password: faker.internet.password()
+    firstName,
+    lastName,
+    email,
+    password,
+    username,
+    registeredAt: new Date(),
+    confirmed: true
   }).save()
   userId = user.id
 })
@@ -34,6 +44,7 @@ test('Make sure it confirms user and clears key in redis', async () => {
   )
 
   const response = await fetch(url)
+  console.log(url)
   const text = await response.text()
   expect(text).toEqual('ok')
   const user = await User.findOne({ where: { id: userId } })

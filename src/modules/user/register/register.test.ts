@@ -10,10 +10,11 @@ import {
 import { TestClient } from '../../../utils/TestClient'
 import { User } from '../../../entity/User'
 
-const validFirstName = faker.name.firstName()
+const validFirstName = faker.name.firstName().toString()
 const validLastName = faker.name.lastName()
 const validEmail = faker.internet.email()
 const validPassword = faker.internet.password()
+const validUsername = faker.internet.userAgent()
 
 let connection: Connection
 
@@ -27,12 +28,13 @@ afterAll(async () => {
 
 describe('Resgister user', async () => {
   test('Register user successfully', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string)
+    const client = new TestClient(process.env.TEST_HOST)
     const response = await client.register(
       validFirstName,
       validLastName,
       validEmail,
-      validPassword
+      validPassword,
+      validUsername
     )
     expect(response.data.register[0]).toEqual({
       ok: '👍',
@@ -52,7 +54,8 @@ describe('Resgister user', async () => {
       validFirstName,
       validLastName,
       validEmail,
-      validPassword
+      validPassword,
+      validUsername
     )
     expect(response.data.register).toHaveLength(1)
     expect(response.data.register[0]).toEqual({
@@ -68,7 +71,8 @@ describe('Resgister user', async () => {
       validFirstName,
       validLastName,
       'as',
-      validPassword
+      validPassword,
+      validUsername
     )
     expect(response.data).toEqual({
       register: [
@@ -92,7 +96,8 @@ describe('Resgister user', async () => {
       validFirstName,
       validLastName,
       validEmail,
-      'te'
+      'te',
+      validUsername
     )
     expect(response.data).toEqual({
       register: [
@@ -111,7 +116,8 @@ describe('Resgister user', async () => {
       validFirstName,
       validLastName,
       'te',
-      'te'
+      'te',
+      validUsername
     )
     expect(response.data).toEqual({
       register: [

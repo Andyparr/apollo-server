@@ -1,6 +1,7 @@
 import { Redis } from 'ioredis'
 import { userLoader } from '../../loaders/UserLoader'
 import * as express from 'express'
+import * as session from 'express-session'
 import { PubSub } from 'apollo-server'
 
 export interface Session extends Express.Session {
